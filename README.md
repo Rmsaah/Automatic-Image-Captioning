@@ -81,16 +81,16 @@ The model's performance is rigorously evaluated using the BLEU (Bilingual Evalua
 
 ---
 
-## 📊 Results
+## Results
 
 * **Best Validation BLEU-4 Score**: `0.0199`
 * Captions were generated and evaluated on the validation set.
 
 | Image         | BLEU-1                       | BLEU-2                 | BLEU-3               | BLEU-4            |
 | ------------- | ---------------------------- | ---------------------- | -------------------- | ----------------- |
-| Dogs running  | Dogs running the             | Dog a dog a ball a     | Dogs in field a      | Woman a and dog a |
-| Man and woman |Man a and woman a and woman a | Man a <unk> a          | Man a and woman a    | Man a in and shirt a |
-| Man on bike   | Man a on bike a              | Boy in red is on beach | Man a on bike a      | Man on bike a     |
+| !(image/img1.png)  | Dogs running the             | Dog a dog a ball a     | Dogs in field a      | Woman a and dog a |
+| !(image/img2.png) |Man a and woman a and woman a | Man a <unk> a          | Man a and woman a    | Man a in and shirt a |
+| !(image/img3.png)  | Man a on bike a              | Boy in red is on beach | Man a on bike a      | Man on bike a     |
 
 
 
@@ -98,7 +98,7 @@ The model's performance is rigorously evaluated using the BLEU (Bilingual Evalua
 
 ---
 
-## 🌐 Web Application
+## Web Application
 
 Run `app.py` to launch the **Streamlit web app**, which allows users to upload images and view generated captions from different model versions (BLEU-1 to BLEU-4 optimized).
 
@@ -108,18 +108,12 @@ streamlit run app.py
 
 ---
 
-## 📚 Literature Review
+## Literature Review & Future Work
 
 This project is inspired by the paper:
-**"Deep Learning Approaches on Image Captioning" by Ghandi et al.**
-It views image captioning as a **sequence-to-sequence (seq2seq)** problem using CNNs to encode image features and RNNs to decode them into text.
+Our image captioning system is built upon the widely recognized Encoder-Decoder architecture, drawing inspiration from the review paper "Deep Learning Approaches on Image Captioning" by Ghandi et al. This paper effectively describes image captioning as a sequence-to-sequence (seq2seq) problem, wherein a CNN encodes visual information and an RNN decodes it into a natural language sequence.
 
----
-
-## 🔭 Future Work
-
-* **Attention Mechanisms**: Integrating attention into the Encoder-Decoder pipeline to allow the model to dynamically focus on image regions during generation.
-* **Reference**: PyTorch attention-based captioning implementations were reviewed, though not implemented due to resource constraints.
+A critical advancement highlighted in the literature is the integration of attention mechanisms into the CNN-RNN pipeline. Attention allows the model to dynamically focus on different parts of the image as it generates each word, leading to more accurate, contextually relevant, and descriptive captions.As part of our research, we reviewed an excellent PyTorch implementation of this attention-based approach. Due to constraints in computational resources and training time, we were unable to implement or train this model. 
 
 ---
 
