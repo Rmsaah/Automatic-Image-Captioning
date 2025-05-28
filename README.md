@@ -88,9 +88,9 @@ The model's performance is rigorously evaluated using the BLEU (Bilingual Evalua
 
 | Image         | BLEU-1                       | BLEU-2                 | BLEU-3               | BLEU-4            |
 | ------------- | ---------------------------- | ---------------------- | -------------------- | ----------------- |
-| !(image/img1.png)  | Dogs running the             | Dog a dog a ball a     | Dogs in field a      | Woman a and dog a |
-| !(image/img2.png) |Man a and woman a and woman a | Man a <unk> a          | Man a and woman a    | Man a in and shirt a |
-| !(image/img3.png)  | Man a on bike a              | Boy in red is on beach | Man a on bike a      | Man on bike a     |
+| !(image/img1.webp)  | Dogs running the             | Dog a dog a ball a     | Dogs in field a      | Woman a and dog a |
+| !(image/img2.jpg) |Man a and woman a and woman a | Man a <unk> a          | Man a and woman a    | Man a in and shirt a |
+| !(image/img3.webp)  | Man a on bike a              | Boy in red is on beach | Man a on bike a      | Man on bike a     |
 
 
 
