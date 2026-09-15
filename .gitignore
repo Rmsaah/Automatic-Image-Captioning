@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# IDE
+.idea/
+
+# Datasets — downloaded separately, see README
+flickr8k/
+flickr30k/
+
+# Local training artifacts (duplicates of models/*.pth)
+myCheckpoints/*.pth
+best_image_captioning_model.pth
