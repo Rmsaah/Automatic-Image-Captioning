@@ -123,8 +123,8 @@ A CUDA GPU is strongly recommended. The runs above were done on an RTX 4080 SUPE
 
 ## Team Members
 
-- [Rmsaah](https://github.com/Rmsaah)
-- [madaweehath](https://github.com/madaweehath)
+- [Reema Al Jbreen](https://github.com/Rmsaah)
+- [Madawee AlHathloul](https://github.com/madaweehath)
 
 ## Future Work
 
