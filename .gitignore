@@ -11,6 +11,10 @@ venv/
 flickr8k/
 flickr30k/
 
-# Local training artifacts (duplicates of models/*.pth)
-myCheckpoints/*.pth
-best_image_captioning_model.pth
+# Per-experiment checkpoints, ~1.1 GB in total. Only the exported best model is
+# tracked; the rest are reproducible by re-running Stage 12.
+models/*.pth
+!models/best_image_captioning_model.pth
+
+# Superseded root-level checkpoint from before the training fix
+/best_image_captioning_model.pth
