@@ -87,9 +87,54 @@ Beam width is not in this list because it only affects caption generation, never
 
 ## Results
 
-Pending. The numbers here were produced before a bug in the training loop was found and fixed, so they are not meaningful and have been removed rather than left to mislead. This section will be refilled once the experiments above have been run.
+All scores are corpus BLEU on the 1,618 held-out validation images, at beam width 3.
 
-For reference, the bug: the loss paired each decoder output with the token two places ahead instead of the next one. Training loss fell normally, which made it look healthy, but the model was learning to skip a word. Captions came out as things like "Man a on bike a" instead of "a man on a bike". BLEU-4 sat at 0.0199 for ten epochs while the loss dropped 28%, and that contradiction was the clue.
+| experiment | epochs run | best epoch | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | val loss |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **finetune_layer4** | 32 | 17 | 0.6194 | 0.4402 | 0.3068 | **0.2133** | 2.7149 |
+| finetune_all | 32 | 17 | 0.6191 | 0.4394 | 0.3052 | 0.2114 | 2.7100 |
+| no_augment | 27 | 12 | 0.6149 | 0.4341 | 0.3014 | 0.2072 | 2.7524 |
+| larger_decoder | 19 | 4 | 0.6152 | 0.4342 | 0.3011 | 0.2069 | 2.7851 |
+| baseline_frozen | 23 | 8 | 0.6185 | 0.4383 | 0.3024 | 0.2065 | 2.7487 |
+
+Three things came out of this:
+
+- **Fine-tuning helps, but not by much.** Unfreezing `layer4` beat the frozen baseline by 0.0068 BLEU-4, about 3%. Flickr8k is everyday photos and ImageNet is too, so the pretrained features already fit; there was not much left to adapt. Unfreezing the whole backbone did slightly worse than unfreezing just `layer4`, which is what you would expect from 25M parameters and 6,473 images.
+- **Decoder size is not the bottleneck.** Doubling the LSTM hidden size gave the worst validation loss of the five and peaked at epoch 4 before early stopping ended it at 19. More decoder capacity just overfits sooner.
+- **Augmentation earned nothing here.** Turning off random crops and flips changed BLEU-4 by 0.0007, which is noise. That makes sense with a frozen CNN: only the small projection head ever sees the pixels.
+
+Every run peaked between epochs 4 and 17 and early stopping ended all of them well before the 100 epoch limit. Overfitting is the binding constraint, not training time, which is why the future work below is about attention and more data rather than longer runs.
+
+### Beam Width
+
+Swept on the finished model, so this costs no retraining.
+
+| beam width | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | mean length |
+| --- | --- | --- | --- | --- | --- |
+| 1 (greedy) | 0.5986 | 0.4179 | 0.2826 | 0.1920 | 10.43 |
+| **3** | 0.6194 | 0.4402 | 0.3068 | **0.2133** | 9.72 |
+| 5 | 0.6173 | 0.4383 | 0.3049 | 0.2118 | 9.35 |
+| 7 | 0.6146 | 0.4366 | 0.3046 | 0.2117 | 9.05 |
+
+Greedy decoding is clearly worse, and past width 3 the captions get shorter without getting better.
+
+### Example Predictions
+
+From `finetune_layer4`, at beam width 3.
+
+| Image | Generated caption |
+| --- | --- |
+| ![](image/img1.webp) | a man and a woman are riding horses at a rodeo |
+| ![](image/img2.jpg) | a man and a woman are standing in front of a white building |
+| ![](image/img3.webp) | a man in a red shirt is sitting on a bench |
+
+These are a fair sample rather than the best three. The third one is basically right. The other two show the usual failure: the model gets the subject and the setting but invents the activity. Nobody is riding in the first image, a girl is leading a horse past a bonfire, and the second is a night food stall rather than a white building. It reaches for the most common phrasing that fits what it sees, which is exactly what a model with no attention mechanism would do, since it compresses the whole image into a single vector before writing a word.
+
+Generated captions average 9.72 tokens against 10.83 for the references, so the model is writing full sentences rather than falling back on a few short safe ones.
+
+### Before the Fix
+
+For context, the earlier version of this project scored BLEU-4 of 0.0199. The loss had paired each decoder output with the token two places ahead instead of the next one, so the model was learning to skip a word. Training loss fell normally, which made it look healthy, but captions came out as "Man a on bike a" instead of "a man on a bike". The clue was BLEU sitting flat for ten epochs while the loss dropped 28%.
 
 ## Web Application
 
@@ -105,7 +150,9 @@ Upload an image and the app generates a caption with the trained model.
 .
 ├── AutomaticImageCaptioning.ipynb   model, training, experiments, analysis
 ├── app.py                           Streamlit app for trying the model
-├── models/                          saved checkpoints and training history
+├── models/
+│   ├── best_image_captioning_model.pth   the exported winning model
+│   └── training_history.json             per-epoch metrics for all five runs
 └── image/                           images used in this README
 ```
 
